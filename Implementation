@@ -1,0 +1,227 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+/// in the case of heap insetion will happen from the left side always
+//// complete binary trree is also a property of heap
+//// max heap is a heap in which the value of parent is always greataer than the children
+
+/// for the heap the left child will be in the 2*i+1(for 0 base indexing) (2*i) for 1 base indexing
+/// right child will be in the 2*i+2 index (2*i+1) for 1 base indexing
+
+/// the parent of a node is in the i/2 index (for 1 base indexing)
+
+/// in case of inserting a value in the max heap i will put the value in the last index of the arry
+// thnen i will chek whetehr after inserting it maintain the property of max heap that mean the value of the 
+/// parent node is greater that it if not then i will swap the value with parent node untill 
+/// the parent is not greater than the children
+
+class heap{
+    public:
+     int arr[100];
+     int size;
+
+
+     heap()
+     {
+        arr[0]=-1;
+        size=0;
+     }
+
+     void insert(int val) ///complexitiy is O(logn)  beacuse in very case i compare with the value of parent which is i/2
+     {
+        size=size+1;
+        int index=size;
+
+        arr[index]=val;
+
+        while(index>1)
+        {
+
+            int parent=index/2;
+            if(arr[parent]<arr[index])
+            {
+                swap(arr[parent],arr[index]);
+            }
+            else{
+                return;  
+            }
+        }
+     }
+
+     //// in time of deletion  swap the first node which mean first value of the arry with the value of index which i want to delete
+     // then remove the last node
+     //// and then check whether it is max hepa property maintain or not 
+     // if not then propagate root node(means compare with the left and right node and return the max value in the root) to its correct position
+
+
+
+     void deleteFromHeap()
+     {
+        if(size==0)
+        {
+            cout<<"nothing to delete "<<endl;
+            return;
+        }
+        // step1: put the last element into first index
+        arr[1]=arr[size]; /// this take O(1)
+
+        ///step2: remove last element
+
+        size--; // this also take O(1)
+
+        ///step3: take root to its correct place
+        int i=1;
+
+        //this operation take O(logn)
+
+        // so the total time complexity is O(1+1+logn)=O(logn)
+        while(i<size)
+        {
+            int left=2*i;
+            int right=2*i+1;
+
+            if(left<size && arr[i]<arr[left])
+            {
+                swap(arr[i],arr[left]);
+                i=left;
+            }
+
+            else if(right<size && arr[i]<arr[right])
+            {
+                swap(arr[i],arr[right]);
+                i=right;
+            }
+            else{
+                return ;
+            }
+        }
+     }
+
+     void print()
+     {
+        for(int i=1;i<=size;i++)
+        {
+            cout<<arr[i]<<" ";
+
+        }cout<<endl;
+     }
+};
+
+
+//// the complexity of this funciton is O(logn)
+
+//// this is also work for max heap
+
+void heapify(int a[],int n,int i)
+{
+    int largest=i;
+    int left=2*i;
+    int right=2*i+1;
+
+    if(left<= n && a[largest] < a[left])
+    {
+        largest=i;
+    }
+    if(right <= n && a[largest] < a[right])
+    {
+        largest=right;
+    }
+
+    if(largest!=i)
+    {
+        swap(a[largest],a[i]);
+        heapify(a,n,largest);
+    }
+}
+
+
+/// this is for min heap building
+
+// void heapify(vector<int>&a,int n,int i)
+// {
+//     int smallest=i;
+//     int left=2*i +1 ;
+//     int right=2*i + 2;
+
+//     if(left <= n && a[smallest] > a[left])
+//     {
+//         smallest=left;
+//     }
+//     if(right <= n && a[smallest] > a[right])
+//     {
+//         smallest=right;
+//     }
+
+//     if(smallest != i)
+//     {
+//         swap(a[smallest] , a[i]);
+//         heapify(a,n,smallest);
+//     }
+// }
+
+
+// for heap sort  this is like the deletion operation
+
+// step1: swpa the first and last element
+///step2: decrease the size
+
+
+void heapsort(int arr[],int n)
+{
+    int size=n;
+
+
+    while(size>1)
+    {
+        //step:1 swap
+
+        swap(arr[size],arr[1]);
+        size--;
+        heapify(arr,size,1);
+    }
+}
+
+int main()
+{
+
+    heap h;
+
+    h.insert(50);
+    h.insert(55);
+    h.insert(53);
+    h.insert(52);
+    h.insert(54);
+
+    h.print();
+
+    h.deleteFromHeap();
+    h.print();
+
+    int arr[6]={-1,54,53,55,52,50};
+
+
+    int n=5;
+
+    for(int i=n/2;i>0;i--)
+    {
+        heapify(arr,n,i);
+    }
+    cout<<endl;
+
+    for(int i=1;i<=n;i++)
+    {
+        cout<<arr[i]<<" ";
+
+    }cout<<endl;
+
+    cout<<"after the heapsort"<<endl;
+
+    heapsort(arr,n);
+
+    for(int i=1;i<=n;i++)
+    {
+        cout<<arr[i]<<" ";
+    }cout<<endl;
+
+    return 0;
+}
